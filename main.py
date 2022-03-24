@@ -4,6 +4,7 @@ import pyperclip
 import random
 import string
 import os
+import sys
 
 
 def get_random_string(length):
@@ -13,16 +14,23 @@ def get_random_string(length):
 
 
 def is_http_or_https(url):
-    if url.startswith("http://") or url.startswith("https://") in url:
+    if url.startswith("http://") or url.startswith("https://"):
         return True
     return False
 
 
+def print_infos(finalPath):
+    print('**********************************************************************************')
+    print('Image will be downloaded here : '+finalPath)
+    print('**********************************************************************************')
+
+
 def print_to_stdout(clipboard_content):
     print ("Found url: %s" % str(clipboard_content))
-    finalPath = "./" + get_random_string(10) + ".jpg"
-    print(finalPath)
+    finalPath = path + get_random_string(10) + ".jpg"
+    print_infos(finalPath)
     os.system("wget -O {0} {1}".format(finalPath, clipboard_content))
+    print('***********************************************************************************')
 
 
 class ClipboardWatcher(threading.Thread):
@@ -48,9 +56,7 @@ class ClipboardWatcher(threading.Thread):
 
 
 def main():
-    watcher = ClipboardWatcher(is_http_or_https,
-                               print_to_stdout,
-                               5.)
+    watcher = ClipboardWatcher(is_http_or_https,print_to_stdout,5.)
     watcher.start()
     while True:
         try:
@@ -62,4 +68,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        global path
+        path = sys.argv[1]
+        main()
+    else:
+        print('Run : python3 main.py [PATH TO DOWNLOAD IMAGE]')
+
