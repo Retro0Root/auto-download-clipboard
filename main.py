@@ -25,9 +25,24 @@ def print_infos(finalPath):
     print('**********************************************************************************')
 
 
+def guess_extension(url):
+    if 'png' in url:
+        return '.png'
+    if 'jpg' in url:
+        return '.jpg'
+    if 'jpeg' in url:
+        return '.jpeg'
+
+
+def print_model():
+    print('*******************************************************')
+    print('* Images auto-downloader start ! - Made by Retro0Root *')
+    print('*******************************************************')
+
+
 def print_to_stdout(clipboard_content):
     print ("Found url: %s" % str(clipboard_content))
-    finalPath = path + get_random_string(10) + ".jpg"
+    finalPath = path + get_random_string(10) + guess_extension(clipboard_content)
     print_infos(finalPath)
     os.system("wget -O {0} {1}".format(finalPath, clipboard_content))
     print('***********************************************************************************')
@@ -61,7 +76,7 @@ def main():
     while True:
         try:
             print("Waiting for changed clipboard...")
-            time.sleep(10)
+            time.sleep(1)
         except KeyboardInterrupt:
             watcher.stop()
             break
@@ -71,7 +86,9 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         global path
         path = sys.argv[1]
+        print_model()
         main()
     else:
-        print('Run : python3 main.py [PATH TO DOWNLOAD IMAGE]')
+        print('Run: python3 main.py [PATH TO DOWNLOAD IMAGE]')
+        print('Ex: python3 main.py /home/samSepi0l/Documents/Images/')
 
